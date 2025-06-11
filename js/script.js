@@ -1,10 +1,10 @@
 const slides = [
-  { type: "image", src: "../media/routine1.png", audio: "../media/audio1.mp3" },
-  { type: "image", src: "../media/routine2.png", audio: "../media/audio2.mp3" },
-  { type: "image", src: "../media/routine3.png", audio: "../media/audio3.mp3" },
+  { type: "image", src: "../media/routine1.png", audio: "../media/01-Intro.WakingUp.mp3" },
+  { type: "image", src: "../media/routine2.png", audio: "../media/01-Intro.Teeth.mp3" },
+  { type: "image", src: "../media/routine3.png", audio: "../media/01-Intro.part3.mp3" },
   { type: "tv-static", audio: "../media/static.mp3" },
   { type: "channel-choice", audio: null },
-  { type: "end", src: "../media/leaving.png", audio: "../media/leaving.mp3" }
+  { type: "end", src: "../media/leaving.png", audio: null }
 ];
 
 let currentSlide = 0;
