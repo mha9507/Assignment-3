@@ -20,18 +20,17 @@
             </div>
         </nav>
     </header>
-
     <div class="bts-container">
         <h1>Behind the Scenes</h1>
         <p>Peek into the creative process behind “In the Eyes of Then.”</p>
 
-        <!-- Replaced preview with Google Drive Embed -->
-        <div class="google-drive-video" style="margin-top: 2rem; text-align: center;">
+        <!-- Google Drive Embedded Video replacing preview -->
+        <div class="google-drive-video" style="text-align: center; margin-top: 1rem;">
             <iframe src="https://drive.google.com/file/d/10OfnoqR16ro2UZP4wmWZX-d_BdqzLiWo/preview" width="640" height="480" allow="autoplay"></iframe>
         </div>
     </div>
 
-    <!-- Modal no longer needed, but keeping it in case you want it later -->
+    <!-- Modal Video Popup -->
     <div id="videoModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
         <video controls autoplay id="modalVideo">
@@ -48,6 +47,8 @@
         function closeModal() {
             const modal = document.getElementById("videoModal");
             modal.style.display = "none";
+
+            // Pause video when closing
             document.getElementById("modalVideo").pause();
         }
     </script>
