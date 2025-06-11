@@ -184,39 +184,44 @@
                 return;
             }
 
-            const currentContent = container.querySelector('img');
+            // Create new image and load it before showing
             const newImg = document.createElement("img");
             newImg.src = slide.src;
-            if (fadeEffect) {
-                newImg.style.opacity = "0";
-                newImg.style.transition = "opacity 0.5s ease-in-out";
-            }
+            newImg.style.position = "absolute";
+            newImg.style.top = "0";
+            newImg.style.left = "0";
+            newImg.style.width = "100%";
+            newImg.style.height = "100%";
+            newImg.style.objectFit = "cover";
+            newImg.style.opacity = "0";
+            newImg.style.transition = "opacity 0.5s ease-in-out";
 
-            if (currentContent) {
-                if (fadeEffect) {
-                    currentContent.style.opacity = "0";
+            // Wait for the new image to load
+            newImg.onload = () => {
+                const currentContent = container.querySelector('img');
+
+                if (currentContent) {
+                    // Add new image while keeping the old one
+                    container.appendChild(newImg);
+                    
+                    // Fade in new image
                     setTimeout(() => {
-                        container.removeChild(currentContent);
-                        container.insertBefore(newImg, container.firstChild);
+                        newImg.style.opacity = "1";
+                        // Fade out old image
+                        currentContent.style.opacity = "0";
+                        
+                        // Remove old image after transition
                         setTimeout(() => {
-                            newImg.style.opacity = "1";
-                        }, 50);
-                    }, 500);
+                            currentContent.remove();
+                        }, 500);
+                    }, 50);
                 } else {
-                    container.removeChild(currentContent);
-                    container.insertBefore(newImg, container.firstChild);
-                    newImg.style.opacity = "1";
-                }
-            } else {
-                container.insertBefore(newImg, container.firstChild);
-                if (fadeEffect) {
+                    container.appendChild(newImg);
                     setTimeout(() => {
                         newImg.style.opacity = "1";
                     }, 50);
-                } else {
-                    newImg.style.opacity = "1";
                 }
-            }
+            };
             
             updateButtons();
         }
@@ -239,6 +244,18 @@
             currentPath = channel;
             currentPathIndex = 0;
 
+            // Create and preload the new image
+            const newImg = document.createElement("img");
+            newImg.src = (channel === 'nick' ? nickPath : cnPath)[0].src;
+            newImg.style.position = "absolute";
+            newImg.style.top = "0";
+            newImg.style.left = "0";
+            newImg.style.width = "100%";
+            newImg.style.height = "100%";
+            newImg.style.objectFit = "cover";
+            newImg.style.opacity = "0";
+            newImg.style.transition = "opacity 0.5s ease-in-out";
+
             // Change audio source based on selection
             audio.src = channel === 'nick' ? 'audio/03-ChoosingNick.mp3' : 'audio/02-ChoosingCN.mp3';
             audio.load();
@@ -249,42 +266,79 @@
             } else {
                 audio.currentTime = 0;
             }
-            
-            audio.play().then(() => {
-                showPathScene(0);
-                updateButtons();
-            }).catch(error => {
-                console.error('Error playing audio:', error);
-                showPathScene(0);
-                updateButtons();
-            });
+
+            // Wait for the new image to load
+            newImg.onload = () => {
+                // Add the new image while keeping the choice interface
+                container.appendChild(newImg);
+                
+                // Start fading in the new image
+                setTimeout(() => {
+                    newImg.style.opacity = "1";
+                    
+                    // Remove the choice interface after fade-in
+                    const choiceInterface = container.querySelector('.channel-buttons');
+                    const choiceImage = container.querySelector('img:not([style*="opacity: 1"])');
+                    if (choiceInterface) {
+                        choiceInterface.style.opacity = "0";
+                        setTimeout(() => {
+                            choiceInterface.remove();
+                            if (choiceImage) choiceImage.remove();
+                        }, 500);
+                    }
+                }, 50);
+
+                audio.play().then(() => {
+                    updateButtons();
+                }).catch(error => {
+                    console.error('Error playing audio:', error);
+                    updateButtons();
+                });
+            };
         }
 
         function showPathScene(index) {
             const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
             const scene = pathScenes[index];
 
-            const currentContent = container.querySelector('img');
+            // Create new image and load it before showing
             const newImg = document.createElement("img");
             newImg.src = scene.src;
+            newImg.style.position = "absolute";
+            newImg.style.top = "0";
+            newImg.style.left = "0";
+            newImg.style.width = "100%";
+            newImg.style.height = "100%";
+            newImg.style.objectFit = "cover";
             newImg.style.opacity = "0";
             newImg.style.transition = "opacity 0.5s ease-in-out";
-            
-            if (currentContent) {
-                currentContent.style.opacity = "0";
-                setTimeout(() => {
-                    container.innerHTML = '';
+
+            // Wait for the new image to load
+            newImg.onload = () => {
+                const currentContent = container.querySelector('img');
+                
+                if (currentContent) {
+                    // Add new image while keeping the old one
+                    container.appendChild(newImg);
+                    
+                    // Fade in new image
+                    setTimeout(() => {
+                        newImg.style.opacity = "1";
+                        // Fade out old image
+                        currentContent.style.opacity = "0";
+                        
+                        // Remove old image after transition
+                        setTimeout(() => {
+                            currentContent.remove();
+                        }, 500);
+                    }, 50);
+                } else {
                     container.appendChild(newImg);
                     setTimeout(() => {
                         newImg.style.opacity = "1";
                     }, 50);
-                }, 500);
-            } else {
-                container.appendChild(newImg);
-                setTimeout(() => {
-                    newImg.style.opacity = "1";
-                }, 50);
-            }
+                }
+            };
 
             updateButtons();
         }
@@ -472,7 +526,7 @@
             });
         }
 
-        // Add clean, modern styles for loading and start button
+        // clean, modern styles for loading and start button
         const style = document.createElement('style');
         style.textContent = `
             .loading-overlay {
