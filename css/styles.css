@@ -188,6 +188,9 @@ a{
 .bts-container {
   padding: 2rem;
   text-align: center;
+  color: black; 
+}
+
 }
 
 .google-drive-video {
