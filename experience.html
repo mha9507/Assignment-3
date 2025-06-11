@@ -96,7 +96,7 @@
         }
         .controls {
             position: fixed;
-            bottom: 2rem;
+            bottom: clamp(4rem, 6vh, 6rem);
             left: 0;
             right: 0;
             display: flex;
@@ -185,8 +185,8 @@
 
         @media (max-width: 768px) {
             .controls {
+                bottom: clamp(3rem, 5vh, 5rem);
                 gap: 0.6rem;
-                bottom: 1rem;
             }
             
             #prev-btn, #next-btn, #restart-btn {
@@ -199,6 +199,7 @@
 
         @media (max-width: 480px) {
             .controls {
+                bottom: clamp(2.5rem, 4vh, 4rem);
                 gap: 0.4rem;
                 padding: 0 0.5rem;
             }
@@ -212,6 +213,9 @@
             color: rgba(255, 255, 255, 0.9);
             font-size: 16px;
             text-align: center;
+        }
+        .footer {
+            padding-bottom: clamp(1rem, 2vh, 2rem);
         }
     </style>
 </head>
@@ -761,7 +765,7 @@
         buttonStyles.textContent = `
             .controls {
                 position: fixed;
-                bottom: 2rem;
+                bottom: clamp(4rem, 6vh, 6rem);
                 left: 0;
                 right: 0;
                 display: flex;
@@ -850,27 +854,16 @@
 
             @media (max-width: 768px) {
                 .controls {
+                    bottom: clamp(3rem, 5vh, 5rem);
                     gap: 0.6rem;
-                    bottom: 1rem;
-                }
-                
-                #prev-btn, #next-btn, #restart-btn {
-                    font-size: 0.8rem;
-                    padding: 0.4rem 0.8rem;
-                    height: 2.2rem;
-                    min-width: 4.5rem;
                 }
             }
 
             @media (max-width: 480px) {
                 .controls {
+                    bottom: clamp(2.5rem, 4vh, 4rem);
                     gap: 0.4rem;
                     padding: 0 0.5rem;
-                }
-                
-                #prev-btn, #next-btn, #restart-btn {
-                    padding: 0.3rem 0.6rem;
-                    min-width: 4rem;
                 }
             }
         `;
