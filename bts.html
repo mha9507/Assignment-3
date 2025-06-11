@@ -2,63 +2,81 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Behind the Scenes</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Behind the Scenes</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+  <style>
+    /* Modal styling (you can move to CSS file) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal iframe {
+      max-width: 90%;
+      max-height: 80%;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="title">In the Eyes of Then</div>
-            <div>
-                <a href="./index.html">Home</a>
-                <a href="./experience.html">Experience</a>
-                <a class="active" href="./bts.html">BTS</a>
-                <a href="./creator.html">Creators</a>
-            </div>
-        </nav>
-    </header>
-    <div class="bts-container">
-        <h1>Behind the Scenes</h1>
-        <p>Peek into the creative process behind “In the Eyes of Then.”</p>
+  <header>
+    <nav class="navbar">
+      <div class="title">In the Eyes of Then</div>
+      <div>
+        <a href="./index.html">Home</a>
+        <a href="./experience.html">Experience</a>
+        <a class="active" href="./bts.html">BTS</a>
+        <a href="./creator.html">Creators</a>
+      </div>
+    </nav>
+  </header>
 
-        <!-- Embedded Preview -->
-        <div class="video-preview" onclick="openModal()">
-            <video src="../media/behindthescenes.mp4" muted autoplay loop></video>
-            <div class="overlay">▶ Watch Fullscreen</div>
-        </div>
+  <div class="bts-container">
+    <h1>Behind the Scenes</h1>
+    <p>Peek into the creative process behind “In the Eyes of Then.”</p>
 
-        <!-- Google Drive Embedded Video -->
-        <div class="google-drive-video" style="margin-top: 2rem;">
-            <iframe src="https://drive.google.com/file/d/10OfnoqR16ro2UZP4wmWZX-d_BdqzLiWo/preview" width="640" height="480" allow="autoplay"></iframe>
-        </div>
+    <!-- Clickable thumbnail to trigger modal -->
+    <div class="video-preview" onclick="openModal()" style="cursor: pointer; text-align: center;">
+      <img src="./media/thumbnail.jpg" alt="Click to watch video" style="max-width: 100%; height: auto;" />
+      <div class="overlay">▶ Watch Fullscreen</div>
     </div>
+  </div>
 
-    <!-- Modal Video Popup -->
-    <div id="videoModal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <video controls autoplay id="modalVideo">
-            <source src="../media/behindthescenes.mp4" type="video/mp4">
-            Your browser does not support HTML5 video.
-        </video>
-    </div>
+  <!-- Modal with Google Drive Embed -->
+  <div id="videoModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <iframe src="https://drive.google.com/file/d/10OfnoqR16ro2UZP4wmWZX-d_BdqzLiWo/preview" width="960" height="540" allow="autoplay"></iframe>
+  </div>
 
-    <script>
-        function openModal() {
-            document.getElementById("videoModal").style.display = "flex";
-        }
+  <script>
+    function openModal() {
+      document.getElementById("videoModal").style.display = "flex";
+    }
 
-        function closeModal() {
-            const modal = document.getElementById("videoModal");
-            modal.style.display = "none";
-
-            // Pause video when closing
-            document.getElementById("modalVideo").pause();
-        }
-    </script>
+    function closeModal() {
+      document.getElementById("videoModal").style.display = "none";
+    }
+  </script>
 </body>
 
 </html>
-
