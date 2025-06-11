@@ -24,13 +24,13 @@ function renderSlide(index) {
 
   if (slide.type === "tv-static") {
     const img = document.createElement("img");
-    img.src = "../media/background.gif";
+    img.src = "/media/background.gif";
     container.appendChild(img);
   }
 
   if (slide.type === "channel-choice") {
     const tvImg = document.createElement("img");
-    tvImg.src = "../media/choice.png";
+    tvImg.src = "/media/choice.png";
     container.appendChild(tvImg);
 
     const btnContainer = document.createElement("div");
