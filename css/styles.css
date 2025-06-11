@@ -220,7 +220,7 @@ a{
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.5rem;
   padding: 0.5rem;
-  justify-content: center; /* centers grid items if fewer */
+  justify-items: center; /* centers grid items if fewer */
 }
 
 .creator-card,
