@@ -20,38 +20,22 @@
             </div>
         </nav>
     </header>
+
     <div class="bts-container">
         <h1>Behind the Scenes</h1>
         <p>Peek into the creative process behind “In the Eyes of Then.”</p>
 
-        <!-- Google Drive Embedded Video replacing preview -->
-        <div class="google-drive-video" style="text-align: center; margin-top: 1rem;">
-            <iframe src="https://drive.google.com/file/d/10OfnoqR16ro2UZP4wmWZX-d_BdqzLiWo/preview" width="640" height="700" allow="autoplay"></iframe>
+        <!-- Google Drive Embedded Video (Large) -->
+        <div class="google-drive-video" style="text-align: center; margin-top: 2rem;">
+            <iframe 
+                src="https://drive.google.com/file/d/10OfnoqR16ro2UZP4wmWZX-d_BdqzLiWo/preview" 
+                width="960" 
+                height="540" 
+                allow="autoplay"
+                style="max-width: 100%; border: none;">
+            </iframe>
         </div>
     </div>
-
-    <!-- Modal Video Popup -->
-    <div id="videoModal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <video controls autoplay id="modalVideo">
-            <source src="../media/behindthescenes.mp4" type="video/mp4">
-            Your browser does not support HTML5 video.
-        </video>
-    </div>
-
-    <script>
-        function openModal() {
-            document.getElementById("videoModal").style.display = "flex";
-        }
-
-        function closeModal() {
-            const modal = document.getElementById("videoModal");
-            modal.style.display = "none";
-
-            // Pause video when closing
-            document.getElementById("modalVideo").pause();
-        }
-    </script>
 </body>
 
 </html>
