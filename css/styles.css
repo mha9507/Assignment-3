@@ -159,73 +159,25 @@ a{
 
 
 /* page 3 */
-
 .bts-container {
   padding: 2rem;
   text-align: center;
 }
 
-.video-preview {
-  position: relative;
-  display: inline-block;
-  width: 70%;
-  max-width: 800px;
-  cursor: pointer;
-  margin-top: 1rem;
-}
-
-.video-preview video {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.video-preview .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.4);
-  color: #fff;
-  font-size: 2rem;
+.google-drive-video {
   display: flex;
-  align-items: center;
   justify-content: center;
-  opacity: 0;
-  transition: 0.3s;
+  margin-top: 2rem;
 }
 
-.video-preview:hover .overlay {
-  opacity: 1;
+.google-drive-video iframe {
+  width: 100%;
+  max-width: 960px;
+  height: 540px;
+  border: none;
+  border-radius: 10px;
 }
 
-/* Modal Styles */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 99;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  justify-content: center;
-  align-items: center;
-}
-
-.modal video {
-  width: 90%;
-  max-width: 900px;
-  border-radius: 12px;
-}
-
-.modal .close {
-  position: absolute;
-  top: 30px;
-  right: 40px;
-  font-size: 3rem;
-  color: #fff;
-  cursor: pointer;
-}
 
 /* page 4 */
 
