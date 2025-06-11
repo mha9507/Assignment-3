@@ -191,6 +191,8 @@ a{
   color: black; 
 }
 
+.bts-container p {
+  margin-bottom: 2rem; /* space below the paragraph */
 }
 
 .google-drive-video {
