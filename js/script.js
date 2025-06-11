@@ -102,10 +102,17 @@ function showChannel(choice) {
   container.innerHTML = "";
   container.appendChild(channelImg);
 
-  // Optional: Play a specific sound for channel choice
-  audioPlayer.pause();
-  audioPlayer.removeAttribute("src");
-  audioPlayer.style.display = "none";
+  // Set and play channel-specific audio
+  const channelAudio = choice === "CN"
+    ? "../media/02-ChoosingCN.mp3"
+    : "../media/03-ChoosingNick.mp3";
+
+  audioPlayer.src = channelAudio;
+  audioPlayer.style.display = "block";
+  audioPlayer.load();
+  audioPlayer.play().catch(err => {
+    console.warn("Channel audio failed to play:", err);
+  });
 
   nextBtn.style.display = "inline-block";
   prevBtn.style.display = "inline-block";
