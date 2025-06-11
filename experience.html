@@ -33,7 +33,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: transparent;
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -78,15 +78,98 @@
             100% { transform: rotate(360deg); }
         }
         #manualStart {
-            background: none;
-            border: 1px solid white;
-            color: white;
-            padding: 5px 15px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 20px;
+            font-size: 16px;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            font-size: 14px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            border-radius: 4px;
         }
         #manualStart:hover {
             background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            color: white;
+        }
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(0.75rem, 1.5vw, 1.5rem);
+            z-index: 10;
+            padding: 0 1rem;
+        }
+
+        .controls-center {
+            display: flex;
+            align-items: center;
+            position: static;
+            transform: none;
+        }
+
+        #prev-btn, #next-btn, #restart-btn {
+            all: unset;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: clamp(0.4rem, 0.8vw, 0.8rem) clamp(0.8rem, 1.2vw, 1.2rem);
+            font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            height: clamp(2.2rem, 2.8vw, 2.8rem);
+            min-width: clamp(5rem, 6vw, 6rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            margin: 0;
+            position: static;
+            color: #000;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #prev-btn:hover, #next-btn:hover, #restart-btn:hover {
+            background-color: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                gap: 0.6rem;
+                bottom: 1rem;
+            }
+            
+            #prev-btn, #next-btn, #restart-btn {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+                height: 2.2rem;
+                min-width: 4.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .controls {
+                gap: 0.4rem;
+                padding: 0 0.5rem;
+            }
+            
+            #prev-btn, #next-btn, #restart-btn {
+                padding: 0.3rem 0.6rem;
+                min-width: 4rem;
+            }
+        }
+        .loading-message {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            text-align: center;
         }
     </style>
 </head>
@@ -115,6 +198,9 @@
         </div>
         <div class="controls">
             <button id="prev-btn">Previous</button>
+            <div class="controls-center">
+                <button id="restart-btn">Restart</button>
+            </div>
             <button id="next-btn">Next</button>
         </div>
     </main>
@@ -199,6 +285,11 @@
             // Wait for the new image to load
             newImg.onload = () => {
                 const currentContent = container.querySelector('img');
+                // Remove any existing channel buttons
+                const channelButtons = container.querySelector('.channel-buttons');
+                if (channelButtons) {
+                    channelButtons.remove();
+                }
 
                 if (currentContent) {
                     // Add new image while keeping the old one
@@ -227,17 +318,38 @@
         }
 
         function showChoice() {
-            container.innerHTML = `
-                <img src="media/choice.png" style="width: 100%; height: 100%; object-fit: cover;">
+            const currentContent = container.querySelector('img');
+            const choiceContent = `
+                <img src="media/choice.png" style="width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease-in-out;">
                 <div class="channel-buttons">
                     <button onclick="selectChannel('nick')">Nickelodeon</button>
                     <button onclick="selectChannel('cn')">Cartoon Network</button>
                 </div>
             `;
 
+            if (currentContent) {
+                // Start fade out of current content
+                currentContent.style.opacity = "0";
+                
+                // After fade out, show choice screen with fade in
+                setTimeout(() => {
+                    container.innerHTML = choiceContent;
+                    const newImage = container.querySelector('img');
+                    setTimeout(() => {
+                        newImage.style.opacity = "1";
+                    }, 50);
+                }, 500);
+            } else {
+                container.innerHTML = choiceContent;
+                const newImage = container.querySelector('img');
+                setTimeout(() => {
+                    newImage.style.opacity = "1";
+                }, 50);
+            }
+
             // Hide navigation buttons during choice
             nextBtn.style.display = "none";
-            prevBtn.style.display = "none";
+            prevBtn.style.display = "block";
         }
 
         function selectChannel(channel) {
@@ -390,7 +502,6 @@
                     if (currentPathIndex > 0 && pathScenes[currentPathIndex - 1]) {
                         audio.currentTime = pathScenes[currentPathIndex - 1].endTime;
                     } else {
-                        // Set to 2.3 seconds for Nickelodeon, 0 for CN
                         audio.currentTime = currentPath === 'nick' ? 2.3 : 0;
                     }
                     audio.play().catch(error => {
@@ -400,6 +511,13 @@
                     // Return to main sequence
                     currentPath = null;
                     currentSlide = scenes.length - 2; // Go to scene before choice
+                    
+                    // Remove channel buttons if they exist
+                    const channelButtons = container.querySelector('.channel-buttons');
+                    if (channelButtons) {
+                        channelButtons.remove();
+                    }
+
                     audio.src = 'audio/01-WakingUp.mp3';
                     audio.load();
                     if (scenes[currentSlide - 1]) {
@@ -526,9 +644,151 @@
             });
         }
 
-        // clean, modern styles for loading and start button
-        const style = document.createElement('style');
-        style.textContent = `
+        function restartExperience() {
+            // Reset all state variables
+            currentSlide = 0;
+            currentPath = null;
+            currentPathIndex = 0;
+            
+            // Reset audio to beginning
+            audio.src = 'audio/01-WakingUp.mp3';
+            audio.load();
+            audio.currentTime = 0;
+
+            // Clear container and remove any existing content
+            container.innerHTML = '';
+
+            // Start from beginning
+            audio.play().then(() => {
+                renderSlide(0);
+                updateButtons();
+            }).catch(error => {
+                console.error('Failed to restart audio:', error);
+                renderSlide(0);
+                updateButtons();
+            });
+        }
+
+        // Event listeners
+        nextBtn.addEventListener("click", nextSlide);
+        prevBtn.addEventListener("click", prevSlide);
+        document.getElementById('restart-btn').addEventListener("click", restartExperience);
+
+        // Initialize experience
+        Promise.all([
+            new Promise(resolve => {
+                if (audio.readyState >= 2) resolve();
+                else audio.addEventListener('canplay', resolve);
+            }),
+            preloadImages()
+        ]).then(() => {
+            // Show first slide immediately as background
+            const firstSlide = document.createElement("img");
+            firstSlide.src = scenes[0].src;
+            firstSlide.style.width = "100%";
+            firstSlide.style.height = "100%";
+            firstSlide.style.objectFit = "cover";
+            container.insertBefore(firstSlide, loading);
+            
+            startExperience();
+        }).catch(error => {
+            console.error('Failed to load resources:', error);
+            loading.innerHTML = `
+                <div class="loading-message">
+                    Failed to load resources. Please refresh the page.
+                </div>
+            `;
+        });
+
+        // Remove any conflicting styles for the restart button
+        const existingStyles = document.querySelectorAll('style');
+        existingStyles.forEach(style => {
+            if (style.textContent.includes('#restart-btn')) {
+                style.remove();
+            }
+        });
+
+        // Add unified button styles
+        const buttonStyles = document.createElement('style');
+        buttonStyles.textContent = `
+            .controls {
+                position: fixed;
+                bottom: 2rem;
+                left: 0;
+                right: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: clamp(0.75rem, 1.5vw, 1.5rem);
+                z-index: 10;
+                padding: 0 1rem;
+            }
+
+            .controls-center {
+                display: flex;
+                align-items: center;
+                position: static;
+                transform: none;
+            }
+
+            #prev-btn, #next-btn, #restart-btn {
+                all: unset;
+                background-color: rgba(255, 255, 255, 0.85);
+                padding: clamp(0.4rem, 0.8vw, 0.8rem) clamp(0.8rem, 1.2vw, 1.2rem);
+                font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+                cursor: pointer;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                height: clamp(2.2rem, 2.8vw, 2.8rem);
+                min-width: clamp(5rem, 6vw, 6rem);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: nowrap;
+                margin: 0;
+                position: static;
+                color: #000;
+                font-weight: 500;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            #prev-btn:hover, #next-btn:hover, #restart-btn:hover {
+                background-color: rgba(255, 255, 255, 0.95);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            @media (max-width: 768px) {
+                .controls {
+                    gap: 0.6rem;
+                    bottom: 1rem;
+                }
+                
+                #prev-btn, #next-btn, #restart-btn {
+                    font-size: 0.8rem;
+                    padding: 0.4rem 0.8rem;
+                    height: 2.2rem;
+                    min-width: 4.5rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .controls {
+                    gap: 0.4rem;
+                    padding: 0 0.5rem;
+                }
+                
+                #prev-btn, #next-btn, #restart-btn {
+                    padding: 0.3rem 0.6rem;
+                    min-width: 4rem;
+                }
+            }
+        `;
+        document.head.appendChild(buttonStyles);
+
+        // Add loading overlay styles
+        const loadingStyles = document.createElement('style');
+        loadingStyles.textContent = `
             .loading-overlay {
                 position: absolute;
                 top: 0;
@@ -567,10 +827,9 @@
                 text-align: center;
             }
         `;
-        document.head.appendChild(style);
+        document.head.appendChild(loadingStyles);
 
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
-
 </html>
