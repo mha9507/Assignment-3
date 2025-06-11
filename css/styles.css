@@ -136,6 +136,13 @@ a{
   z-index: 10;
 }
 
+#prev-btn, #next-btn {
+  display: flex;
+  align-items: center;      /* vertical centering */
+  justify-content: center;  /* horizontal centering */
+  text-align: center;       /* fallback for text centering */
+}
+
 #next-btn:hover {
   background-color: #ffcc00;
 }
