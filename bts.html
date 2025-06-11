@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Behind the Scenes</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="title">In the Eyes of Then</div>
+            <div>
+                <a href="./index.html">Home</a>
+                <a href="./experience.html">Experience</a>
+                <a class="active" href="./bts.html">BTS</a>
+                <a href="./creator.html">Creators</a>
+            </div>
+        </nav>
+    </header>
+    <div class="bts-container">
+        <h1>Behind the Scenes</h1>
+        <p>Peek into the creative process behind “In the Eyes of Then.”</p>
+
+        <!-- Embedded Preview -->
+        <div class="video-preview" onclick="openModal()">
+            <video src="../media/behind-scenes.mp4" muted autoplay loop></video>
+            <div class="overlay">▶ Watch Fullscreen</div>
+        </div>
+    </div>
+
+    <!-- Modal Video Popup -->
+    <div id="videoModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <video controls autoplay id="modalVideo">
+            <source src="../media/behind-scenes.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("videoModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("videoModal");
+            modal.style.display = "none";
+
+            // Pause video when closing
+            document.getElementById("modalVideo").pause();
+        }
+
+    </script>
+</body>
+
+</html>
