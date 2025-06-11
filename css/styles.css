@@ -317,6 +317,16 @@ a{
     margin: 1rem;
   }
 
+
+.controls #prev-btn,
+.controls #next-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+
   .home {
     padding: 1rem;
     height: auto;
