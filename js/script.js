@@ -1,10 +1,10 @@
 const slides = [
-  { type: "image", src: "../media/routine1.png" },
-  { type: "image", src: "../media/routine2.png" },
-  { type: "image", src: "../media/routine3.png" },
+  { type: "image", src: "/media/routine1.png" },
+  { type: "image", src: "/media/routine2.png" },
+  { type: "image", src: "/media/routine3.png" },
   { type: "tv-static" },
   { type: "channel-choice" },
-  { type: "end", src: "../media/leaving.png" }
+  { type: "end", src: "/media/leaving.png" }
 ];
 
 let currentSlide = 0;
@@ -80,7 +80,7 @@ function updateButtons() {
 
 function showChannel(choice) {
   const channelImg = document.createElement("img");
-  channelImg.src = choice === "CN" ? "../media/CN.gif" : "../media/nickelodeon..gif";
+  channelImg.src = choice === "CN" ? "/media/CN.gif" : "/media/nickelodeon..gif";
   container.innerHTML = "";
   container.appendChild(channelImg);
 
