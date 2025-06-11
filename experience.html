@@ -5,11 +5,93 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Experience – In the Eyes of Then</title>
-    <link rel="stylesheet" href="./css/styles.css" />
-    <link rel="stylesheet" href="experience.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .scene-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .fade-out {
+            opacity: 0;
+        }
+        .fade-in {
+            opacity: 1;
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        .start-container {
+            text-align: center;
+        }
+        .start-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .start-button:hover {
+            background: #2980b9;
+        }
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            font-size: 18px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #manualStart {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #manualStart:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-gray-900 text-white min-h-screen">
     <header>
         <nav class="navbar">
             <div class="title">In the Eyes of Then</div>
@@ -24,17 +106,417 @@
     <main class="slideshow-container">
         <div class="slide" id="slide-container">
             <!-- Image and overlayed content dynamically inserted -->
+            <div id="loading" class="loading-overlay">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <p>Loading experience...</p>
+                </div>
+            </div>
         </div>
         <div class="controls">
             <button id="prev-btn">Previous</button>
             <button id="next-btn">Next</button>
         </div>
-
     </main>
 
-    <audio id="narration" src="assets/morning-audio.mp3"></audio>
+    <audio id="narration" preload="auto">
+        <source src="audio/01-WakingUp.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-    <script src="./js/script.js"></script>
+    <footer class="footer text-center py-4">
+        <p class="text-sm text-gray-400">
+            © <span id="year">2025</span> In the Eyes of Then. Created by Hamad
+        </p>
+    </footer>
+
+    <script>
+        const scenes = [
+            { type: "image", src: "media/routine1.png", endTime: 22 },
+            { type: "image", src: "media/routine2.png", endTime: 42 },
+            { type: "image", src: "media/routine3.png", endTime: 54 },
+            { type: "channel-choice", src: "media/choice.png", endTime: Infinity }
+        ];
+
+        const nickPath = [
+            { type: "video", src: "media/nickelodeon.gif", endTime: 127 }, // 2:07 minutes
+            { type: "image", src: "media/leaving.png", endTime: Infinity }
+        ];
+
+        const cnPath = [
+            { type: "video", src: "media/CN.gif", endTime: 136 }, // 2:16 minutes
+            { type: "image", src: "media/leaving.png", endTime: Infinity }
+        ];
+
+        let currentSlide = 0;
+        let currentPath = null;
+        let currentPathIndex = 0;
+        let experienceStarted = false;
+        const container = document.getElementById("slide-container");
+        const nextBtn = document.getElementById("next-btn");
+        const prevBtn = document.getElementById("prev-btn");
+        const loading = document.getElementById("loading");
+        const audio = document.getElementById("narration");
+
+        // Preload all images
+        function preloadImages() {
+            const allImages = [
+                ...scenes.map(scene => scene.src),
+                ...nickPath.map(scene => scene.src),
+                ...cnPath.map(scene => scene.src)
+            ];
+            
+            return Promise.all(allImages.map(imageSrc => {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = imageSrc;
+                });
+            }));
+        }
+
+        function renderSlide(index, fadeEffect = true) {
+            const slide = scenes[index];
+            
+            if (slide.type === "channel-choice") {
+                showChoice();
+                return;
+            }
+
+            const currentContent = container.querySelector('img');
+            const newImg = document.createElement("img");
+            newImg.src = slide.src;
+            if (fadeEffect) {
+                newImg.style.opacity = "0";
+                newImg.style.transition = "opacity 0.5s ease-in-out";
+            }
+
+            if (currentContent) {
+                if (fadeEffect) {
+                    currentContent.style.opacity = "0";
+                    setTimeout(() => {
+                        container.removeChild(currentContent);
+                        container.insertBefore(newImg, container.firstChild);
+                        setTimeout(() => {
+                            newImg.style.opacity = "1";
+                        }, 50);
+                    }, 500);
+                } else {
+                    container.removeChild(currentContent);
+                    container.insertBefore(newImg, container.firstChild);
+                    newImg.style.opacity = "1";
+                }
+            } else {
+                container.insertBefore(newImg, container.firstChild);
+                if (fadeEffect) {
+                    setTimeout(() => {
+                        newImg.style.opacity = "1";
+                    }, 50);
+                } else {
+                    newImg.style.opacity = "1";
+                }
+            }
+            
+            updateButtons();
+        }
+
+        function showChoice() {
+            container.innerHTML = `
+                <img src="media/choice.png" style="width: 100%; height: 100%; object-fit: cover;">
+                <div class="channel-buttons">
+                    <button onclick="selectChannel('nick')">Nickelodeon</button>
+                    <button onclick="selectChannel('cn')">Cartoon Network</button>
+                </div>
+            `;
+
+            // Hide navigation buttons during choice
+            nextBtn.style.display = "none";
+            prevBtn.style.display = "none";
+        }
+
+        function selectChannel(channel) {
+            currentPath = channel;
+            currentPathIndex = 0;
+
+            // Change audio source based on selection
+            audio.src = channel === 'nick' ? 'audio/03-ChoosingNick.mp3' : 'audio/02-ChoosingCN.mp3';
+            audio.load();
+            
+            // Set initial time for Nickelodeon to 2.3 seconds
+            if (channel === 'nick') {
+                audio.currentTime = 2.3;
+            } else {
+                audio.currentTime = 0;
+            }
+            
+            audio.play().then(() => {
+                showPathScene(0);
+                updateButtons();
+            }).catch(error => {
+                console.error('Error playing audio:', error);
+                showPathScene(0);
+                updateButtons();
+            });
+        }
+
+        function showPathScene(index) {
+            const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+            const scene = pathScenes[index];
+
+            const currentContent = container.querySelector('img');
+            const newImg = document.createElement("img");
+            newImg.src = scene.src;
+            newImg.style.opacity = "0";
+            newImg.style.transition = "opacity 0.5s ease-in-out";
+            
+            if (currentContent) {
+                currentContent.style.opacity = "0";
+                setTimeout(() => {
+                    container.innerHTML = '';
+                    container.appendChild(newImg);
+                    setTimeout(() => {
+                        newImg.style.opacity = "1";
+                    }, 50);
+                }, 500);
+            } else {
+                container.appendChild(newImg);
+                setTimeout(() => {
+                    newImg.style.opacity = "1";
+                }, 50);
+            }
+
+            updateButtons();
+        }
+
+        function updateButtons() {
+            if (currentPath) {
+                const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+                prevBtn.style.display = "block"; // Always show to allow returning to start
+                nextBtn.style.display = currentPathIndex < pathScenes.length - 1 ? "block" : "none";
+            } else {
+                prevBtn.style.display = currentSlide > 0 ? "block" : "none";
+                nextBtn.style.display = currentSlide < scenes.length - 1 ? "block" : "none";
+            }
+        }
+
+        function nextSlide() {
+            if (!experienceStarted) return;
+
+            if (currentPath) {
+                const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+                if (currentPathIndex < pathScenes.length - 1) {
+                    currentPathIndex++;
+                    showPathScene(currentPathIndex);
+                    if (pathScenes[currentPathIndex - 1]) {
+                        audio.currentTime = pathScenes[currentPathIndex - 1].endTime;
+                        audio.play().catch(error => {
+                            console.error('Error playing audio:', error);
+                        });
+                    }
+                }
+            } else if (currentSlide < scenes.length - 1) {
+                currentSlide++;
+                renderSlide(currentSlide);
+                if (scenes[currentSlide - 1]) {
+                    audio.currentTime = scenes[currentSlide - 1].endTime;
+                    audio.play();
+                }
+            }
+            updateButtons();
+        }
+
+        function prevSlide() {
+            if (!experienceStarted) return;
+
+            if (currentPath) {
+                if (currentPathIndex > 0) {
+                    currentPathIndex--;
+                    showPathScene(currentPathIndex);
+                    if (currentPathIndex > 0 && pathScenes[currentPathIndex - 1]) {
+                        audio.currentTime = pathScenes[currentPathIndex - 1].endTime;
+                    } else {
+                        // Set to 2.3 seconds for Nickelodeon, 0 for CN
+                        audio.currentTime = currentPath === 'nick' ? 2.3 : 0;
+                    }
+                    audio.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                    });
+                } else {
+                    // Return to main sequence
+                    currentPath = null;
+                    currentSlide = scenes.length - 2; // Go to scene before choice
+                    audio.src = 'audio/01-WakingUp.mp3';
+                    audio.load();
+                    if (scenes[currentSlide - 1]) {
+                        audio.currentTime = scenes[currentSlide - 1].endTime;
+                    }
+                    audio.play().then(() => {
+                        renderSlide(currentSlide);
+                    }).catch(error => {
+                        console.error('Error playing audio:', error);
+                        renderSlide(currentSlide);
+                    });
+                }
+            } else if (currentSlide > 0) {
+                currentSlide--;
+                renderSlide(currentSlide);
+                if (currentSlide === 0) {
+                    audio.currentTime = 0;
+                } else if (scenes[currentSlide - 1]) {
+                    audio.currentTime = scenes[currentSlide - 1].endTime;
+                }
+                audio.play();
+            }
+            updateButtons();
+        }
+
+        // Handle audio timeupdate for automatic scene transitions
+        audio.addEventListener("timeupdate", () => {
+            if (!experienceStarted) return;
+            
+            if (currentPath) {
+                const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+                const currentTime = audio.currentTime;
+                const targetScene = pathScenes.findIndex(scene => currentTime < scene.endTime);
+                
+                if (targetScene !== -1 && targetScene !== currentPathIndex && targetScene < pathScenes.length) {
+                    currentPathIndex = targetScene;
+                    showPathScene(currentPathIndex);
+                    updateButtons();
+                }
+            } else {
+                const currentTime = audio.currentTime;
+                const targetScene = scenes.findIndex(scene => currentTime < scene.endTime);
+                
+                if (targetScene !== -1 && targetScene !== currentSlide && targetScene < scenes.length) {
+                    currentSlide = targetScene;
+                    renderSlide(currentSlide);
+                    updateButtons();
+                }
+            }
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!experienceStarted) return;
+            
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                prevSlide();
+            }
+        });
+
+        // Event listeners
+        nextBtn.addEventListener("click", nextSlide);
+        prevBtn.addEventListener("click", prevSlide);
+
+        // Initialize experience
+        Promise.all([
+            new Promise(resolve => {
+                if (audio.readyState >= 2) resolve();
+                else audio.addEventListener('canplay', resolve);
+            }),
+            preloadImages()
+        ]).then(() => {
+            // Show first slide immediately as background
+            const firstSlide = document.createElement("img");
+            firstSlide.src = scenes[0].src;
+            firstSlide.style.width = "100%";
+            firstSlide.style.height = "100%";
+            firstSlide.style.objectFit = "cover";
+            container.insertBefore(firstSlide, loading);
+            
+            startExperience();
+        }).catch(error => {
+            console.error('Failed to load resources:', error);
+            loading.innerHTML = `
+                <div class="loading-message">
+                    Failed to load resources. Please refresh the page.
+                </div>
+            `;
+        });
+
+        function startExperience() {
+            if (experienceStarted) return;
+            
+            audio.play().then(() => {
+                experienceStarted = true;
+                loading.style.display = 'none';
+                renderSlide(0);
+                updateButtons();
+            }).catch(error => {
+                console.error('Audio playback failed:', error);
+                loading.innerHTML = `
+                    <div class="start-container">
+                        <button id="manualStart">Start Experience</button>
+                    </div>
+                `;
+                
+                document.getElementById('manualStart').addEventListener('click', () => {
+                    audio.play().then(() => {
+                        experienceStarted = true;
+                        loading.style.display = 'none';
+                        renderSlide(0);
+                        updateButtons();
+                    }).catch(error => {
+                        console.error('Failed to play audio even after user interaction:', error);
+                        // Still start the experience without audio if it fails
+                        experienceStarted = true;
+                        loading.style.display = 'none';
+                        renderSlide(0);
+                        updateButtons();
+                    });
+                });
+            });
+        }
+
+        // Add clean, modern styles for loading and start button
+        const style = document.createElement('style');
+        style.textContent = `
+            .loading-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.85);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            }
+            .start-container {
+                text-align: center;
+            }
+            #manualStart {
+                background: transparent;
+                border: 2px solid rgba(255, 255, 255, 0.8);
+                color: rgba(255, 255, 255, 0.9);
+                padding: 8px 20px;
+                font-size: 16px;
+                letter-spacing: 0.5px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-family: inherit;
+                border-radius: 4px;
+            }
+            #manualStart:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: white;
+                color: white;
+            }
+            .loading-message {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 16px;
+                text-align: center;
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>
