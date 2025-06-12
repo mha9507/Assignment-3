@@ -1,3 +1,4 @@
+// main story scenes with timings
 const scenes = [
     { type: "image", src: "media/routine1.png", endTime: 22 },
     { type: "image", src: "media/routine2.png", endTime: 42 },
@@ -5,27 +6,32 @@ const scenes = [
     { type: "channel-choice", src: "media/choice.png", endTime: Infinity }
 ];
 
+// nickelodeon path scenes
 const nickPath = [
     { type: "video", src: "media/nickelodeon.gif", endTime: 127 }, // 2:07 minutes
     { type: "image", src: "media/leaving.png", endTime: Infinity }
 ];
 
+// cartoon network path scenes
 const cnPath = [
     { type: "video", src: "media/CN.gif", endTime: 136 }, // 2:16 minutes
     { type: "image", src: "media/leaving.png", endTime: Infinity }
 ];
 
+// track current state
 let currentSlide = 0;
 let currentPath = null;
 let currentPathIndex = 0;
 let experienceStarted = false;
+
+// grab important elements
 const container = document.getElementById("slide-container");
 const nextBtn = document.getElementById("next-btn");
 const prevBtn = document.getElementById("prev-btn");
 const loading = document.getElementById("loading");
 const audio = document.getElementById("narration");
 
-// Preload all images
+// load all images before starting
 function preloadImages() {
     const allImages = [
         ...scenes.map(scene => scene.src),
@@ -43,6 +49,7 @@ function preloadImages() {
     }));
 }
 
+// show a specific slide with fade effect
 function renderSlide(index, fadeEffect = true) {
     const slide = scenes[index];
     
@@ -51,7 +58,7 @@ function renderSlide(index, fadeEffect = true) {
         return;
     }
 
-    // Create new image and load it before showing
+    // create and setup new image
     const newImg = document.createElement("img");
     newImg.src = slide.src;
     newImg.style.position = "absolute";
@@ -63,26 +70,21 @@ function renderSlide(index, fadeEffect = true) {
     newImg.style.opacity = "0";
     newImg.style.transition = "opacity 0.5s ease-in-out";
 
-    // Wait for the new image to load
+    // handle image loading and transitions
     newImg.onload = () => {
         const currentContent = container.querySelector('img');
-        // Remove any existing channel buttons
+        // cleanup old buttons
         const channelButtons = container.querySelector('.channel-buttons');
         if (channelButtons) {
             channelButtons.remove();
         }
 
         if (currentContent) {
-            // Add new image while keeping the old one
+            // smooth transition between images
             container.appendChild(newImg);
-            
-            // Fade in new image
             setTimeout(() => {
                 newImg.style.opacity = "1";
-                // Fade out old image
                 currentContent.style.opacity = "0";
-                
-                // Remove old image after transition
                 setTimeout(() => {
                     currentContent.remove();
                 }, 500);
@@ -97,7 +99,7 @@ function renderSlide(index, fadeEffect = true) {
     
     updateButtons();
 }
-
+// channel choice screen
 function showChoice() {
     const currentContent = container.querySelector('img');
     const choiceContent = `
@@ -132,7 +134,7 @@ function showChoice() {
     nextBtn.style.display = "none";
     prevBtn.style.display = "block";
 }
-
+/* select a channel and start the experience */
 function selectChannel(channel) {
     currentPath = channel;
     currentPathIndex = 0;
@@ -193,7 +195,7 @@ function selectChannel(channel) {
         });
     };
 }
-
+/* show a specific path scene */
 function showPathScene(index) {
     const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
     const scene = pathScenes[index];
@@ -276,7 +278,7 @@ function nextSlide() {
     }
     updateButtons();
 }
-
+/* go back to the previous scene */
 function prevSlide() {
     if (!experienceStarted) return;
 
@@ -428,7 +430,7 @@ function startExperience() {
         });
     });
 }
-
+/* restart the experience */
 function restartExperience() {
     // Reset all state variables
     currentSlide = 0;

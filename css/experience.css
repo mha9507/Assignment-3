@@ -1,8 +1,11 @@
+/* styles for the main image container and scene transitions */
 .image-container {
     position: relative;
     width: 100%;
     height: 100%;
 }
+
+/* makes images fill the screen nicely */
 .scene-image {
     position: absolute;
     top: 0;
@@ -12,12 +15,16 @@
     object-fit: cover;
     transition: opacity 0.5s ease-in-out;
 }
+
+/* fade animation classes */
 .fade-out {
     opacity: 0;
 }
 .fade-in {
     opacity: 1;
 }
+
+/* loading screen overlay */
 .loading-overlay {
     position: absolute;
     top: 0;
@@ -30,10 +37,14 @@
     justify-content: center;
     z-index: 1000;
 }
+
+/* centers loading text and spinner */
 .loading-content {
     text-align: center;
     color: white;
 }
+
+/* cool spinning loading animation */
 .loading-spinner {
     width: 40px;
     height: 40px;
@@ -43,9 +54,13 @@
     animation: spin 1s linear infinite;
     margin: 0 auto 20px;
 }
+
+/* styles for the start screen */
 .start-container {
     text-align: center;
 }
+
+/* main start button style */
 .start-button {
     background: #3498db;
     color: white;
@@ -56,18 +71,26 @@
     cursor: pointer;
     transition: background 0.3s ease;
 }
+
+/* hover effect for start button */
 .start-button:hover {
     background: #2980b9;
 }
+
+/* error message styling */
 .error-message {
     color: #e74c3c;
     text-align: center;
     font-size: 18px;
 }
+
+/* spinning animation keyframes */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* manual start button style */
 #manualStart {
     background: transparent;
     border: 2px solid rgba(255, 255, 255, 0.8);
@@ -80,11 +103,15 @@
     font-family: inherit;
     border-radius: 4px;
 }
+
+/* hover effect for manual start */
 #manualStart:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: white;
     color: white;
 }
+
+/* navigation controls at bottom */
 .controls {
     position: fixed;
     bottom: clamp(4rem, 6vh, 6rem);
@@ -98,6 +125,7 @@
     padding: 0 1rem;
 }
 
+/* progress bar container */
 .progress-container {
     width: 100%;
     max-width: 600px;
@@ -108,6 +136,7 @@
     position: relative;
 }
 
+/* actual progress bar */
 .progress-bar {
     background: rgba(255, 255, 255, 0.85);
     height: 100%;
@@ -116,6 +145,7 @@
     transition: width 0.1s linear;
 }
 
+/* draggable progress handle */
 .progress-handle {
     position: absolute;
     top: 50%;
@@ -129,10 +159,12 @@
     transition: opacity 0.2s;
 }
 
+/* show handle on hover */
 .progress-container:hover .progress-handle {
     opacity: 1;
 }
 
+/* container for navigation buttons */
 .button-controls {
     display: flex;
     justify-content: center;
@@ -140,12 +172,14 @@
     gap: clamp(0.75rem, 1.5vw, 1.5rem);
 }
 
+/* center button container */
 .controls-center {
     display: flex;
     align-items: center;
-    justify-content: center;
+    position: static;
+    transform: none;
 }
-
+/* navigation button styles */
 #prev-btn, #next-btn, #restart-btn {
     background-color: rgba(255, 255, 255, 0.85);
     color: #1a1a1a;
@@ -161,13 +195,14 @@
     text-align: center;
     font-weight: 500;
 }
-
+/* hover effect for navigation buttons */
 #prev-btn:hover, #next-btn:hover, #restart-btn:hover {
     background-color: rgba(255, 255, 255, 0.95);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* media queries for responsive design */
 @media (max-width: 768px) {
     .controls {
         bottom: clamp(3rem, 5vh, 5rem);
@@ -188,6 +223,7 @@
 
 }
 
+/* smaller screen sizes */
 @media (max-width: 480px) {
     .controls {
         bottom: clamp(2.5rem, 4vh, 4rem);
@@ -200,11 +236,13 @@
         min-width: 4rem;
     }
 }
+/* loading message styling */
 .loading-message {
     color: rgba(255, 255, 255, 0.9);
     font-size: 16px;
     text-align: center;
 }
+/* footer padding */
 .footer {
     padding-bottom: clamp(1rem, 2vh, 2rem);
 }

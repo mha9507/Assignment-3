@@ -5,11 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Experience – In the Eyes of Then</title>
+    <!-- main styles and experience-specific styles -->
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/experience.css" />
 </head>
 
 <body class="bg-gray-900 text-white min-h-screen">
+    <!-- navigation bar -->
     <header>
         <nav class="navbar">
             <div class="title">In the Eyes of Then</div>
@@ -21,9 +23,11 @@
             </div>
         </nav>
     </header>
+
+    <!-- main content area for slides -->
     <main class="slideshow-container">
         <div class="slide" id="slide-container">
-            <!-- Image and overlayed content dynamically inserted -->
+            <!-- slides will be inserted here -->
             <div id="loading" class="loading-overlay">
                 <div class="loading-content">
                     <div class="loading-spinner"></div>
@@ -31,6 +35,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- navigation and progress controls -->
         <div class="controls">
             <div class="progress-container" id="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
@@ -46,16 +52,20 @@
         </div>
     </main>
 
+    <!-- background narration audio -->
     <audio id="narration" preload="auto">
         <source src="audio/01-WakingUp.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
+    <!-- footer section -->
     <footer class="footer text-center py-4">
         <p class="text-sm text-gray-400">
             © <span id="year">2025</span> In the Eyes of Then. Created by Hamad
         </p>
     </footer>
+
+    <!-- main experience script -->
     <script src="js/experience.js"></script>
 </body>
 </html>
