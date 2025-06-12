@@ -181,6 +181,10 @@ function selectChannel(channel) {
             }
         }, 50);
 
+        // Show navigation buttons
+        nextBtn.style.display = "block";
+        prevBtn.style.display = "block";
+
         audio.play().then(() => {
             updateButtons();
         }).catch(error => {
@@ -564,7 +568,7 @@ buttonStyles.textContent = `
         transition: all 0.3s ease;
         height: clamp(2.2rem, 2.8vw, 2.8rem);
         min-width: clamp(5rem, 6vw, 6rem);
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         white-space: nowrap;
@@ -573,6 +577,8 @@ buttonStyles.textContent = `
         color: #000;
         font-weight: 500;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        line-height: 1;
     }
 
     #prev-btn:hover, #next-btn:hover, #restart-btn:hover {
